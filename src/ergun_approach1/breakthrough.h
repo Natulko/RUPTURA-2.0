@@ -1,9 +1,9 @@
 /**
  * \brief Summary of changes compared to RUPTURA 1.0:
  *
- * - Added std::vector<double> Ptnew; (line )
- * - Added argument T_g to void computeVelocityErgun(double T_g); (line)
- * - Added void computeInitialPressure(double *p, double T_g); (line )
+ * - Added std::vector<double> Ptnew; (line 182)
+ * - Added argument T_g to void computeVelocity(double T_g); (line 243)
+ * - Added void computeInitialPressure(double *p, double T_g); (line 253)
  */
 
 #include <cstddef>

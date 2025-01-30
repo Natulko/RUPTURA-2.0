@@ -2,11 +2,14 @@
  * \brief Summary of changes compared to RUPTURA 1.0:
  *
  * - void Breakthrough::initialize()
- *   initializes pressure using computeInitialPressure(&pt_init[0], T) instead of constant dptdx assumption; (line ) 
+ *   initializes pressure using computeInitialPressure(&pt_init[0], T) instead of constant dptdx assumption; (line 182) 
  * - void Breakthrough::computeStep(size_t step)
- *   uses computeVelocity(T) with argument T needed for Ergun equation; (lines )
- *   and has printing statements afterwards for confirming non-convergence of approach 1; (lines)
- * - 
+ *   uses computeVelocity(T) with argument T needed for Ergun equation; (lines 463, 492, 523)
+ *   and has printing statements afterwards for confirming non-convergence of approach 1;
+ * - void Breakthrough::computeVelocity(double T_g)
+ *   now uses Ergun equation instead of derived from material balance equation; (lines 640-685)
+ * - void Breakthrough::computeInitialPressure(double *p, double T_g)
+ *   is added to compute pressure for initialization from the initial velocity using Ergun equation; (lines 687-729)
  */
 
 #include <algorithm>
@@ -458,7 +461,10 @@ void Breakthrough::computeStep(size_t step)
   computeEquilibriumLoadings();
 
   computeVelocity(T);
-  // if (step == 1){
+
+  // In the first few steps we can see that velocity explodes
+
+  // if (step == 1 || step == 2){
   //   std::cout << "Pressures and velocities on step (SSP-RK part 1)" << step << std::endl;
   //   std::cout << "Pressure at inlet and outlet: " << Pt[0] << "; " << Pt[Ngrid] << std::endl;
   //   std::cout << "Velocities at inlet and outlet : " << Vnew[0] << "; " <<  Vnew[Ngrid] << std::endl;
@@ -484,7 +490,10 @@ void Breakthrough::computeStep(size_t step)
   computeEquilibriumLoadings();
 
   computeVelocity(T);
-  // if (step == 1){
+
+  // In the first few steps we can see that velocity explodes
+
+  // if (step == 1 || step == 2){
   //   std::cout << "Pressures and velocities on step (SSP-RK part 2)" << step << std::endl;
   //   std::cout << "Pressure at inlet and outlet: " << Pt[0] << "; " << Pt[Ngrid] << std::endl;
   //   std::cout << "Velocities at inlet and outlet : " << Vnew[0] << "; " <<  Vnew[Ngrid] << std::endl;
@@ -512,7 +521,10 @@ void Breakthrough::computeStep(size_t step)
   computeEquilibriumLoadings();
 
   computeVelocity(T);
-  // if (step == 1){
+
+  // In the first few steps we can see that velocity explodes
+
+  // if (step == 1 || step == 2){
   //   std::cout << "Pressures and velocities on step (SSP-RK part 3)" << step << std::endl;
   //   std::cout << "Pressure at inlet and outlet: " << Pt[0] << "; " << Pt[Ngrid] << std::endl;
   //   std::cout << "Velocities at inlet and outlet : " << Vnew[0] << "; " <<  Vnew[Ngrid] << std::endl;
