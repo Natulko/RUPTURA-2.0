@@ -1,0 +1,49 @@
+{% set name = "ruptura" %}
+{% set version = "1.0.4" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/ruptura-{{ version }}.tar.gz
+  sha256: 27001c61e0ee798d3e8e9f45c17228619d6c7af253d1c79309aac8cb2530d419
+
+build:
+  skip: true  # [py<310]
+  script: {{ PYTHON }} -m pip install . -vv
+  number: 0
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
+  host:
+    - python
+    - setuptools >=42
+    - pybind11 >=2.10.0
+    - pip
+  run:
+    - python
+    - matplotlib-base >=3
+    - numpy >=1
+    - pybind11 >=2
+    - setuptools >=42
+
+test:
+  imports:
+    - ruptura
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/iRASPA/RUPTURA
+  summary: "A simulation package to compute breakthrough curves and IAST mixture predictions."
+  license: MIT
+  license_file: LICENSE.md
+
+extra:
+  recipe-maintainers:
+    - YouriRan
