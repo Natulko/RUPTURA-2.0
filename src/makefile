@@ -1,4 +1,17 @@
-CXXFLAGS=-g -O3 -std=c++17 -march=native -ffast-math -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror -fomit-frame-pointer -ftree-vectorize -fno-stack-check -funroll-loops
+#CXXFLAGS=-g -O3 -std=c++17 -march=native -ffast-math -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Werror -fomit-frame-pointer -ftree-vectorize -fno-stack-check -funroll-loops
+
+CXXFLAGS=-g -O3 -std=c++17 -march=native -ffast-math -fomit-frame-pointer -ftree-vectorize -fno-stack-check -funroll-loops
+
+LINKFLAGS = -Wl,-rpath,./libs
+
+libdir = ./libs
+#libdir = C:/cvode-7.1.1/build-cygwin/src/
+LIBS = -lm
+LIBRARIES = -lsundials_cvode -lsundials_nvecserial -lsundials_nvecmanyvector -lsundials_core #${LIBS}
+LDFLAGS = -L${libdir} ${LIBRARIES} ${LINKFLAGS}
+
+includedir = C:/cvode-7.1.1/include/
+INCLUDES  = -I${includedir}
 
 default: ruptura;
 
@@ -24,16 +37,16 @@ inputreader.o: inputreader.cpp inputreader.h
 	$(CXX) $(CXXFLAGS) -c inputreader.cpp
 
 breakthrough.o: breakthrough.cpp breakthrough.h
-	$(CXX) $(CXXFLAGS) -c breakthrough.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c breakthrough.cpp $(LDFLAGS)
 
 fitting.o: fitting.cpp fitting.h
 	$(CXX) $(CXXFLAGS) -c fitting.cpp
 
 main.o : main.cpp 
-	$(CXX) $(CXXFLAGS) -c main.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES)  -c main.cpp
 
 ruptura: random_numbers.o special_functions.o isotherm.o multi_site_isotherm.o component.o mixture_prediction.o inputreader.o breakthrough.o fitting.o main.o
-	$(CXX) main.o fitting.o breakthrough.o inputreader.o mixture_prediction.o component.o multi_site_isotherm.o isotherm.o special_functions.o random_numbers.o -o ruptura
+	$(CXX) $(INCLUDES) main.o fitting.o breakthrough.o inputreader.o mixture_prediction.o component.o multi_site_isotherm.o isotherm.o special_functions.o random_numbers.o -o ruptura $(LDFLAGS)
 
 clean:
 	rm -f *.pcm *.o *.a ruptura
